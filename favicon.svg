@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- A key cap on its own dark tile, so it shows on light and dark tab bars alike. -->
+  <rect width="32" height="32" rx="7" fill="#0f1115"/>
+  <rect x="5" y="5" width="22" height="21" rx="4" fill="#222833" stroke="#7aa2f7" stroke-width="2"/>
+  <path d="M10 12h12M10 16h8M10 20h10" stroke="#e8edf3" stroke-width="2" stroke-linecap="round"/>
+</svg>
