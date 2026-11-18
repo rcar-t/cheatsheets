@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iTerm2 Hotkeys</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --card: #161a21;
+    --line: #232934;
+    --text: #c9d1dc;
+    --muted: #7d8794;
+    --key-bg: #222833;
+    --key-line: #313948;
+    --key-text: #e8edf3;
+    --a: #7aa2f7; /* windows & tabs */
+    --b: #9ece6a; /* panes */
+    --c: #e0af68; /* broadcast */
+    --d: #bb9af7; /* copy & paste */
+    --e: #7dcfff; /* find */
+    --f: #ff9e64; /* scroll & marks */
+    --g: #73daca; /* view */
+    --h: #f7768e; /* session */
+    --l: #c0caf5; /* copy mode */
+    --m: #e6c07b; /* shell */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text); }
+  body {
+    font: 11.5px/1.3 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    padding: 10px 16px 12px;
+  }
+  header {
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  h1 { font-size: 14px; font-weight: 650; color: var(--key-text); letter-spacing: .2px; }
+  header p { color: var(--muted); font-size: 11px; }
+  main { columns: 16rem; column-gap: 18px; column-rule: 1px solid var(--line); }
+  h2 {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px;
+    color: var(--accent); padding: 2px 0 3px; margin: 0 0 2px;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    break-after: avoid;
+  }
+  section { break-inside: avoid; padding-bottom: 8px; }
+  h2 small { color: var(--muted); font-weight: 500; text-transform: none; letter-spacing: 0; }
+  .row {
+    display: grid; grid-template-columns: 8.2rem 1fr; column-gap: 8px; align-items: center;
+    padding: 1px 0; break-inside: avoid;
+  }
+  .group {
+    background: color-mix(in srgb, var(--accent) 9%, transparent);
+    border-radius: 5px;
+    padding: 1px 4px; margin: 1px -4px;
+    break-inside: avoid;
+  }
+  .keys { white-space: nowrap; display: flex; gap: 2px; align-items: center; }
+  .label { min-width: 0; }
+  kbd {
+    font: 12.5px/1 "SF Mono", ui-monospace, Menlo, monospace;
+    color: var(--key-text);
+    background: var(--key-bg);
+    border: 1px solid var(--key-line);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 1px 3px 0;
+    min-width: 18px; text-align: center;
+  }
+  .sep { color: var(--muted); font-size: 10px; padding: 0 2px; }
+  .note { color: var(--muted); font-size: 10px; margin-top: 2px; break-inside: avoid; }
+</style>
+</head>
+<body>
+<header>
+  <h1>iTerm2 hotkeys</h1>
+  <p>Defaults in iTerm2 3.7 · ⌘ cmd · ⌥ opt · ⌃ ctrl · ⇧ shift · ↩ return · ⇥ tab</p>
+</header>
+<main id="sheet"></main>
+
+<script>
+// [title, accent, note, rows, footnote]; row = [keys, label], " / " in keys = alternatives.
+// A row that is itself a list of rows is drawn as a boxed group of related keys.
+const SECTIONS = [
+  ["Windows & tabs", "--a", "", [
+    ["⌘T", "New tab"],
+    ["⌥⌘T", "New tab next to current"],
+    ["⌥⇧⌘T", "New tab, current profile"],
+    ["⌘N", "New window"],
+    ["⌥⇧⌘N", "New window, current profile"],
+    ["⌘W", "Close pane / tab"],
+    ["⇧⌘W", "Close window"],
+    ["⇧⌘T", "Undo close"],
+    ["⌘1–9", "Go to tab N"],
+    ["⌥⌘1–9", "Go to window N"],
+    [["⇧⌘]", "Next tab"], ["⇧⌘[", "Previous tab"]],
+    [["⌘→", "Next tab"], ["⌘←", "Previous tab"]],
+    [["⌃⇥", "Recent tab, forward"], ["⌃⇧⇥", "Recent tab, back"]],
+    [["⌥⇧⌘]", "Move tab right"], ["⌥⇧⌘[", "Move tab left"]],
+    [["⇧⌘→", "Move tab right"], ["⇧⌘←", "Move tab left"]],
+    [["⌃⇧⌘]", "Next tab group"], ["⌃⇧⌘[", "Previous tab group"]],
+    ["⌘`", "Cycle windows"],
+    [["⌘M", "Minimize window"], ["⇧⌘0", "Zoom window"]],
+    ["⌘↩ / ⌃⌘F", "Full screen"],
+    ["⇧⌘U", "Tabs in full screen"],
+    ["⇧⌘S", "Save window arrangement"],
+    ["⌥⇧⌘S", "Save arrangement, this window"],
+  ]],
+  ["Split panes", "--b", "", [
+    ["⌘D", "Split vertically ┃"],
+    ["⇧⌘D", "Split horizontally ━"],
+    [["⌥⇧⌘V", "Split vertically, pick profile"], ["⌥⇧⌘H", "Split horiz., pick profile"]],
+    ["⌥⌘←↑↓→", "Focus pane in direction"],
+    [["⌘]", "Next pane"], ["⌘[", "Previous pane"]],
+    [["⌥⌘]", "Next peer pane"], ["⌥⌘[", "Previous peer pane"]],
+    ["⌃⌘←↑↓→", "Resize pane"],
+    ["⇧⌘↩", "Maximize pane (toggle)"],
+    ["⌥⌘W", "Close all panes in tab"],
+    ["⌥⇧⌘B", "Bury (hide) session"],
+  ]],
+  ["Broadcast input", "--c", "", [
+    ["⇧⌘I", "To all panes, all tabs"],
+    ["⌥⌘I", "To all panes, this tab"],
+    ["⌥⇧⌘I", "Current session only"],
+    ["⌃⌥⇧⌘I", "Toggle for this session"],
+  ]],
+  ["Find", "--e", "", [
+    ["⌘F", "Find"],
+    [["⌘G", "Next match"], ["⇧⌘G", "Previous match"]],
+    ["⌘E", "Find selected text"],
+    ["⌥⇧⌘E", "Clear find"],
+    ["⇧⌘F", "Find in all sessions"],
+    ["⌥⌘↩", "Select all matches"],
+    ["⌥⌘U", "Find URLs"],
+    ["⌥⇧⌘U", "Smart-selection matches"],
+    ["⌥⇧⌘O", "Pick result to open"],
+    ["⌥⇧⌘F", "Filter output"],
+  ]],
+  ["Scroll, marks & clear", "--f", "", [
+    [["⌘↑", "Scroll up one line"], ["⌘↓", "Scroll down one line"]],
+    [["⌘PgUp", "Page up (also ⇧)"], ["⌘PgDn", "Page down (also ⇧)"]],
+    [["⌘Home", "Scroll to top"], ["⌘End", "Scroll to bottom"]],
+    [["⇧⌘M", "Set mark"], ["⇧⌘J", "Jump to mark"]],
+    [["⇧⌘↑", "Previous mark"], ["⇧⌘↓", "Next mark"]],
+    ["⌥⇧⌘M", "Set named mark"],
+    ["⌥⌘M", "Annotate at cursor"],
+    [["⌥⇧⌘↑", "Previous annotation"], ["⌥⇧⌘↓", "Next annotation"]],
+    ["⌘\\", "Show annotations"],
+    ["⌥⌘A", "Alert on next mark"],
+    [["⌘K", "Clear buffer"], ["⇧⌘K", "Clear scrollback"]],
+    ["⌘L", "Clear to start of selection"],
+    ["⌥⌘L", "Clear to last mark"],
+    ["⌘R", "Reset terminal"],
+  ]],
+  ["View", "--g", "", [
+    [["⌘+", "Font bigger"], ["⌘-", "Font smaller"], ["⌘0", "Font reset"]],
+    ["⌥⌘0", "Restore text & session size"],
+    ["⌘/", "Find cursor"],
+    ["⌥⌘;", "Cursor guide"],
+    ["⇧⌘E", "Timestamps"],
+    ["⌘U", "Transparency"],
+    ["⇧⌘B", "Toolbelt"],
+    ["⇧⌘O", "Open Quickly (find session)"],
+    ["⌥⌘B", "Instant Replay (← → · esc)"],
+    [["⌥⌘Z", "Zoom in on selection"], ["esc", "Zoom out"]],
+    ["⇧⌘.", "Composer"],
+    ["⌥⇧⌘.", "Auto Composer"],
+    ["⌥⇧⌘Y", "Auto command completion"],
+    ["⌥⌘G", "Session note"],
+    ["⇧⌘=", "Clippings"],
+    ["⇧⌘-", "Pin hotkey window"],
+  ]],
+  ["Shell line editing", "--m", "zsh / bash", [
+    [["⌃A", "Line start"], ["⌃E", "Line end"]],
+    ["⌃W", "Delete word back"],
+    [["⌃U", "Delete line (bash: to start)"], ["⌃K", "Delete to end of line"]],
+    ["⌃Y", "Paste last deleted text"],
+    ["⌃_", "Undo"],
+    ["⌃R", "Search history"],
+    [["⌃P", "Previous command"], ["⌃N", "Next command"]],
+    ["⌃T", "Swap characters"],
+    ["⌃L", "Clear screen"],
+    [["⌃C", "Interrupt"], ["⌃D", "EOF / exit"], ["⌃Z", "Suspend"]],
+  ]],
+];
+
+// "⌥⇧⌘T" -> ⌥ ⇧ ⌘ T as separate boxes. Alternatives sharing the same
+// modifiers are factored: "⌥⇧⌘] / ⌥⇧⌘[" -> ⌥ ⇧ ⌘ ] / [.
+const MODS = "⌃⌥⇧⌘";
+const split = k => { let i = 0; while (i < k.length && MODS.includes(k[i])) i++; return [[...k.slice(0, i)], k.slice(i)]; };
+const box = k => `<kbd>${esc(k)}</kbd>`;
+const PLUS = '', SEP = '<span class="sep">/</span>';
+const combo = (mods, key) => [...mods, key].filter(Boolean).map(box).join(PLUS);
+function renderKeys(keys) {
+  if (!/[⌃⌥⇧⌘]/.test(keys)) return keys.split(" / ").map(a => a.split(" ").map(box).join(" ")).join(SEP);
+  const alts = keys.split(" / ").map(split);
+  const same = alts.every(([m]) => m.join("") === alts[0][0].join(""));
+  if (same && alts.length > 1) return combo(alts[0][0], "") + PLUS + alts.map(([, k]) => box(k)).join(SEP);
+  return alts.map(([m, k]) => combo(m, k)).join(SEP);
+}
+const renderRow = ([keys, label]) => `<div class="row">
+      <span class="keys">${renderKeys(keys)}</span>
+      <span class="label">${esc(label)}</span></div>`;
+const esc = s => s.replace(/[&<>]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;"}[c]));
+document.getElementById("sheet").innerHTML = SECTIONS.map(([title, accent, note, rows, foot]) => `
+  <section style="--accent: var(${accent})">
+    <h2>${esc(title)}${note ? ` <small>${esc(note)}</small>` : ""}</h2>
+    ${rows.map(r => Array.isArray(r[0])
+      ? `<div class="group">${r.map(renderRow).join("")}</div>`
+      : renderRow(r)).join("")}
+    ${foot ? `<p class="note">${esc(foot)}</p>` : ""}
+  </section>`).join("");
+</script>
+</body>
+</html>
