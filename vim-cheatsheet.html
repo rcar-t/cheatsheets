@@ -109,7 +109,7 @@ const SECTIONS = [
     [":r file", "Insert file below cursor"],
     [":r !cmd", "Insert command output"],
   ]],
-  ["Move", "--b", "", [
+  ["Motions", "--b", "{m} · move the cursor", [
     ["h j k l", "Left, down, up, right"],
     [["w / b", "Next / previous word"], ["e", "End of word"], ["W B E", "Same, by WORD (space-split)"]],
     [["0", "Line start"], ["^", "First non-blank"], ["$", "Line end"]],
@@ -118,9 +118,12 @@ const SECTIONS = [
     ["%", "Matching bracket"],
     [["{ / }", "Previous / next paragraph"]],
     [["H M L", "Top, middle, bottom of screen"]],
+    ["``", "Back to last jump"],
+  ], "After an operator, a motion sets how far it acts: d$ deletes to line end, c} changes to paragraph end, yG copies to the last line, d3w deletes 3 words. Searches (/text, n) are motions too."],
+  ["Scroll & jump", "--b", "move only, not after an operator", [
     [["⌃U / ⌃D", "Half page up / down"], ["⌃B / ⌃F", "Page up / down"]],
-    [["zz", "Center cursor line"]],
-    [["⌃O / ⌃I", "Jump back / forward"], ["``", "Back to last jump"]],
+    ["zz", "Center cursor line"],
+    ["⌃O / ⌃I", "Jump back / forward"],
   ]],
   ["Edit", "--c", "", [
     [["x", "Delete char"], ["r x", "Replace char with x"], ["~", "Toggle case"]],
