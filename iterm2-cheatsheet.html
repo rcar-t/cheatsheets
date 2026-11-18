@@ -70,12 +70,20 @@
   }
   .sep { color: var(--muted); font-size: 10px; padding: 0 2px; }
   .note { color: var(--muted); font-size: 10px; margin-top: 2px; break-inside: avoid; }
+  nav.sheets { margin-left: auto; display: flex; gap: 4px; }
+  nav.sheets a {
+    font: 600 10.5px/1 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    color: var(--muted); text-decoration: none;
+    border: 1px solid var(--key-line); border-radius: 5px; padding: 3px 8px;
+  }
+  nav.sheets a:hover { color: var(--key-text); background: var(--key-bg); }
 </style>
 </head>
 <body>
 <header>
   <h1>iTerm2 hotkeys</h1>
   <p>Defaults in iTerm2 3.7 · ⌘ cmd · ⌥ opt · ⌃ ctrl · ⇧ shift · ↩ return · ⇥ tab</p>
+  <nav class="sheets" aria-label="Other cheatsheets"><a href="nano-cheatsheet.html">nano</a><a href="vim-cheatsheet.html">Vim</a></nav>
 </header>
 <main id="sheet"></main>
 
