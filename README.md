@@ -4,6 +4,7 @@ Single-page HTML quick references, sized to fit half a screen.
 
 | Sheet | What it covers |
 |---|---|
+| [claude-code-cheatsheet.html](claude-code-cheatsheet.html) | Claude Code 2.1 default keys: session, mode & model, prompt, text editing, `/` `!` `@` prefixes, history search, transcript viewer |
 | [iterm2-cheatsheet.html](iterm2-cheatsheet.html) | iTerm2 3.7 default hotkeys: windows & tabs, split panes, broadcast input, find, scroll & marks, view, shell line editing |
 | [nano-cheatsheet.html](nano-cheatsheet.html) | GNU nano 8.x keys: files, cut & paste, edit, delete, search, move, view, tools; plus the keys of macOS's built-in `nano` (UW Pico 5.09) |
 | [vim-cheatsheet.html](vim-cheatsheet.html) | Vim 9.1 (also macOS `vi`): modes, save & quit, motions, editing, operators & text objects, visual mode, search & replace, windows, registers & macros, insert mode, settings |

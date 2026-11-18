@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Claude Code Keys</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --card: #161a21;
+    --line: #232934;
+    --text: #c9d1dc;
+    --muted: #7d8794;
+    --key-bg: #222833;
+    --key-line: #313948;
+    --key-text: #e8edf3;
+    --a: #7aa2f7; /* session */
+    --b: #9ece6a; /* mode & model */
+    --c: #e0af68; /* prompt */
+    --d: #bb9af7; /* text editing */
+    --e: #7dcfff; /* prefixes */
+    --f: #ff9e64; /* history search */
+    --g: #73daca; /* transcript */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text); }
+  body {
+    font: 11.5px/1.3 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    padding: 10px 16px 12px;
+  }
+  header {
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  h1 { font-size: 14px; font-weight: 650; color: var(--key-text); letter-spacing: .2px; }
+  header p { color: var(--muted); font-size: 11px; }
+  main { columns: 16rem; column-gap: 18px; column-rule: 1px solid var(--line); }
+  h2 {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px;
+    color: var(--accent); padding: 2px 0 3px; margin: 0 0 2px;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    break-after: avoid;
+  }
+  section { break-inside: avoid; padding-bottom: 8px; }
+  h2 small { color: var(--muted); font-weight: 500; text-transform: none; letter-spacing: 0; }
+  .row {
+    display: grid; grid-template-columns: 8.6rem 1fr; column-gap: 8px; align-items: center;
+    padding: 1px 0; break-inside: avoid;
+  }
+  .group {
+    background: color-mix(in srgb, var(--accent) 9%, transparent);
+    border-radius: 5px;
+    padding: 1px 4px; margin: 1px -4px;
+    break-inside: avoid;
+  }
+  .keys { white-space: nowrap; display: flex; gap: 2px; align-items: center; }
+  .label { min-width: 0; }
+  kbd {
+    font: 12.5px/1 "SF Mono", ui-monospace, Menlo, monospace;
+    color: var(--key-text);
+    background: var(--key-bg);
+    border: 1px solid var(--key-line);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 1px 3px 0;
+    min-width: 18px; text-align: center;
+  }
+  .sep { color: var(--muted); font-size: 10px; padding: 0 2px; }
+  .then { display: inline-block; width: 5px; }
+  .note { color: var(--muted); font-size: 10px; margin-top: 2px; break-inside: avoid; }
+  nav.sheets { margin-left: auto; display: flex; gap: 4px; }
+  nav.sheets a {
+    font: 600 10.5px/1 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    color: var(--muted); text-decoration: none;
+    border: 1px solid var(--key-line); border-radius: 5px; padding: 3px 8px;
+  }
+  nav.sheets a:hover { color: var(--key-text); background: var(--key-bg); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Claude Code keys</h1>
+  <p>Defaults in Claude Code 2.1 · ⌃ ctrl · ⌥ opt · ⇧ shift · ↩ return · ⇥ tab · ⌫ delete</p>
+  <nav class="sheets" aria-label="Other cheatsheets"><a href="iterm2-cheatsheet.html">iTerm2</a><a href="nano-cheatsheet.html">nano</a><a href="vim-cheatsheet.html">Vim</a></nav>
+</header>
+<main id="sheet"></main>
+
+<script>
+// [title, accent, note, rows, footnote]; row = [keys, label].
+// Keys: " / " separates alternatives; a single space separates keys pressed in sequence.
+// A row that is itself a list of rows is drawn as a boxed group of related keys.
+const SECTIONS = [
+  ["Session", "--a", "", [
+    [["esc", "Stop Claude / close dialog"], ["esc esc", "Clear draft, or rewind if empty"]],
+    ["⌃C", "Interrupt; on idle, clear input"],
+    ["⌃D ⌃D", "Exit"],
+    ["⌃Z", "Suspend (fg to resume)"],
+    ["⌃B", "Send running task to background"],
+    ["⌃X ⌃K", "Stop background subagents (×2)"],
+    [["⌃O", "Transcript viewer"], ["⌃T", "Task checklist"]],
+    ["⌃]", "Open latest artifact"],
+    ["⌃L", "Redraw screen"],
+  ]],
+  ["Mode & model", "--b", "", [
+    ["⇧⇥", "Cycle permission mode"],
+    ["⌥P", "Switch model"],
+    [["⇧↑", "More effort"], ["⇧↓", "Less effort"]],
+    ["⌥T", "Toggle extended thinking"],
+    ["⌥O", "Toggle fast mode"],
+  ]],
+  ["Prompt", "--c", "", [
+    ["↩", "Send"],
+    ["⇧↩ / ⌃J / \\ ↩", "New line"],
+    [["⌃X ↩", "Queue message"], ["⌃↩ / ⌃X ⌃S", "Send queued now"]],
+    [["↑", "Previous prompt"], ["↓", "Next prompt"]],
+    ["⌃S", "Stash / restore draft"],
+    ["⌃G / ⌃X ⌃E", "Edit in $EDITOR"],
+    ["⌃V", "Paste image (⌘V in iTerm2)"],
+    ["⇥", "Accept suggestion"],
+    ["space", "Voice: hold to talk (if on)"],
+  ]],
+  ["Text editing", "--d", "", [
+    [["⌃A", "Line start"], ["⌃E", "Line end"]],
+    [["⌥B", "Word back"], ["⌥F", "Word forward"]],
+    [["⌃K", "Delete to line end"], ["⌃U", "Delete to line start"]],
+    [["⌃W", "Delete to whitespace"], ["⌥⌫", "Delete word back"], ["⌥D", "Delete word forward"]],
+    [["⌃Y", "Paste deleted text"], ["⌥Y", "Cycle older deletions"]],
+    ["⌃_", "Undo"],
+  ]],
+  ["Typed at start", "--e", "", [
+    ["/", "Command or skill"],
+    ["!", "Shell mode"],
+    ["@", "Mention a file"],
+    [":", "Emoji shortcode"],
+    ["?", "Shortcut help (empty prompt)"],
+  ]],
+  ["History search", "--f", "after ⌃R", [
+    ["⌃R", "Next match"],
+    ["↩", "Run match"],
+    ["esc / ⇥", "Put match in prompt to edit"],
+    ["⌃S", "Cycle scope"],
+    ["⌃C", "Cancel"],
+  ]],
+  ["Transcript", "--g", "after ⌃O", [
+    [["j / ↓", "Line down"], ["k / ↑", "Line up"]],
+    [["space", "Page down"], ["b", "Page up"]],
+    [["g", "Top"], ["⇧G", "Bottom"]],
+    [["{", "Previous prompt"], ["}", "Next prompt"]],
+    ["[", "Dump to terminal scrollback"],
+    ["v", "Open in $EDITOR"],
+    ["?", "Shortcut help"],
+    ["q / esc", "Close"],
+  ], "{ } [ v ? need fullscreen rendering."],
+];
+
+const MODS = "⌃⌥⇧⌘";
+const split = k => { let i = 0; while (i < k.length && MODS.includes(k[i])) i++; return [[...k.slice(0, i)], k.slice(i)]; };
+const box = k => `<kbd>${esc(k)}</kbd>`;
+const SEP = '<span class="sep">/</span>', THEN = '<span class="then"></span>';
+const chord = t => { const [m, k] = split(t); return [...m, k].filter(Boolean).map(box).join(""); };
+// An ex command (":set nu") is typed as one string, so it gets one box.
+const renderKeys = keys => keys.split(" / ").map(a => a.startsWith(":") ? box(a) : a.split(" ").map(chord).join(THEN)).join(SEP);
+const renderRow = ([keys, label]) => `<div class="row">
+      <span class="keys">${renderKeys(keys)}</span>
+      <span class="label">${esc(label)}</span></div>`;
+const esc = s => s.replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+document.getElementById("sheet").innerHTML = SECTIONS.map(([title, accent, note, rows, foot]) => `
+  <section style="--accent: var(${accent})">
+    <h2>${esc(title)}${note ? ` <small>${esc(note)}</small>` : ""}</h2>
+    ${rows.map(r => Array.isArray(r[0])
+      ? `<div class="group">${r.map(renderRow).join("")}</div>`
+      : renderRow(r)).join("")}
+    ${foot ? `<p class="note">${esc(foot)}</p>` : ""}
+  </section>`).join("");
+
+</script>
+<p class="note" style="margin-top:4px">⌥ keys other than ⌥T need Option sent as Meta: iTerm2 → Settings → Profiles → Keys → Left Option key: Esc+. Rebind keys in ~/.claude/keybindings.json.</p>
+</body>
+</html>
